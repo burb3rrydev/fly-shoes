@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.card-img-top {
+  height: 300px !important; /* Set a fixed height */
+  object-fit: cover !important; /* Crop image to fit the container */
+  width: 100% !important; /* Full width for uniformity */
+  display: block !important;
+}
+
