@@ -1,37 +1,101 @@
-import React, { useState } from 'react'; // Import React and useState hook
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Import Router components for routing
-import Home from './pages/Home'; // Import Home component for the home page
-import Login from './pages/Login'; // Import Login component for the login page
-import Register from './pages/Register'; // Import the Register component for user registration
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS for styling
-import './App.css'; // Import custom CSS for the app
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Cart from './pages/Cart';
+import Navbar from './components/NavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+// src/App.js
+import Success from './pages/Success'; // Adjust the path as necessary
+import Cancel from './pages/Cancel'; // Adjust the path as necessary
+
 
 const App = () => {
-    // State to track whether the user is authenticated
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication state
+    const [cartItems, setCartItems] = useState([]); // Cart state
+
+    // Function to add items to the cart
+    const addToCart = (shoe) => {
+        const existingItem = cartItems.find((item) => item.id === shoe.id);
+        if (existingItem) {
+            setCartItems(
+                cartItems.map((item) =>
+                    item.id === shoe.id ? { ...item, quantity: item.quantity + 1 } : item
+                )
+            );
+        } else {
+            setCartItems([...cartItems, { ...shoe, quantity: 1 }]);
+        }
+    };
+
+    // Function to update quantity in the cart
+    const updateQuantity = (shoe, quantity) => {
+        setCartItems(
+            cartItems.map((item) =>
+                item.id === shoe.id ? { ...item, quantity: parseInt(quantity, 10) } : item
+            )
+        );
+    };
+
+    // Function to remove items from the cart
+    const removeFromCart = (shoe) => {
+        setCartItems(cartItems.filter((item) => item.id !== shoe.id));
+    };
 
     return (
         <Router>
-            {/* Define routes for the application */}
+            <Navbar cartCount={cartItems.reduce((total, item) => total + item.quantity, 0)} />
             <Routes>
-                {/* Route for the home page */}
+                {/* Home route */}
                 <Route
                     path="/home"
-                    element={isAuthenticated ? <Home /> : <Navigate to="/login" />} // If authenticated, show Home; otherwise redirect to Login
+                    element={
+                        isAuthenticated ? (
+                            <Home addToCart={addToCart} />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
                 />
-                {/* Route for the login page */}
+                
+                {/* Cart route */}
+                <Route
+                    path="/cart"
+                    element={
+                        isAuthenticated ? (
+                            <Cart
+                                cartItems={cartItems}
+                                updateQuantity={updateQuantity}
+                                removeFromCart={removeFromCart}
+                            />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                
+                {/* Login route */}
                 <Route
                     path="/login"
-                    element={<Login onLoginSuccess={() => setIsAuthenticated(true)} />} // Pass a prop to Login to set authentication state on successful login
+                    element={
+                        <Login onLoginSuccess={() => setIsAuthenticated(true)} />
+                    }
                 />
-                {/* Route for the registration page */}
-                <Route
-                    path="/register" // Add route for the register page
-                    element={<Register />} // Render the Register component
-                />
+
+                {/* Register route */}
+                <Route path="/register" element={<Register />} />
+
+                {/* Redirect to home if any other path is accessed */}
+                <Route path="*" element={<Navigate to="/home" />} />
+
+                <Route path="/success" element={<Success />} />
+<Route path="/cancel" element={<Cancel />} />
+
             </Routes>
         </Router>
     );
 };
 
-export default App; // Export the App component for use in other parts of the application
+export default App;

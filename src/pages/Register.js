@@ -1,62 +1,73 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';  // Import Bootstrap CSS
+// Import necessary libraries and hooks from React and axios
+import React, { useState } from 'react'; // React and useState hook for state management
+import { useNavigate } from 'react-router-dom'; // useNavigate hook for navigation
+import axios from 'axios'; // axios for making HTTP requests
 
-const Register = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+// Define the Login component, accepting onLoginSuccess as a prop
+const Login = ({ onLoginSuccess }) => {
+    // Declare state variables for username, password, and error messages
+    const [username, setUsername] = useState(''); // State for storing the username input
+    const [password, setPassword] = useState(''); // State for storing the password input
+    const [error, setError] = useState(''); // State for storing error messages
+    const navigate = useNavigate(); // Initialize the useNavigate hook for navigation
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-
+    // Function to handle login form submission
+    const handleLogin = async (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
         try {
-            const response = await axios.post('http://localhost:5000/api/signup', { username, password });
-            setMessage(response.data.message);
-        } catch (error) {
-            if (error.response && error.response.data) {
-                setMessage(error.response.data.message);
+            // Send a POST request to the login API with the username and password
+            const response = await axios.post('http://localhost:5000/api/login', {
+                username,
+                password,
+            });
+
+            // Check if the login was successful
+            if (response.data.success) {
+                onLoginSuccess(); // Call the onLoginSuccess prop function to indicate success
+                navigate('/home'); // Redirect to the home page
             } else {
-                setMessage('Registration failed. Please try again.');
+                setError('Invalid credentials'); // Set an error message if credentials are invalid
             }
+        } catch (error) {
+            // Handle any errors that occur during the request
+            setError('Login failed'); // Set a generic error message
         }
     };
 
+    // Render the login form and error messages
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
-                            <h2 className="card-title text-center mb-4">Register</h2>
-                            <form onSubmit={handleRegister}>
-                                <div className="form-group mb-3">
+                            <h3 className="card-title text-center">Login</h3>
+                            {error && <div className="alert alert-danger">{error}</div>} {/* Show error message if exists */}
+                            <form onSubmit={handleLogin}> {/* Attach handleLogin to form submission */}
+                                <div className="form-group">
                                     <label>Username</label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="Enter username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
+                                        value={username} // Bind input value to username state
+                                        onChange={(e) => setUsername(e.target.value)} // Update username state on input change
+                                        required // Mark this field as required
                                     />
                                 </div>
-                                <div className="form-group mb-3">
+                                <div className="form-group">
                                     <label>Password</label>
                                     <input
                                         type="password"
                                         className="form-control"
-                                        placeholder="Enter password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
+                                        value={password} // Bind input value to password state
+                                        onChange={(e) => setPassword(e.target.value)} // Update password state on input change
+                                        required // Mark this field as required
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary btn-block w-100">
-                                    Register
+                                <button type="submit" className="btn btn-primary btn-block mt-4">
+                                    Login {/* Submit button for the form */}
                                 </button>
                             </form>
-                            {message && <div className="alert alert-info mt-3">{message}</div>}
                         </div>
                     </div>
                 </div>
@@ -65,4 +76,5 @@ const Register = () => {
     );
 };
 
-export default Register;
+// Export the Login component for use in other parts of the application
+export default Login;
