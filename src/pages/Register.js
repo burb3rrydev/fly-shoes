@@ -1,73 +1,62 @@
-// Import necessary libraries and hooks from React and axios
-import React, { useState } from 'react'; // React and useState hook for state management
-import { useNavigate } from 'react-router-dom'; // useNavigate hook for navigation
-import axios from 'axios'; // axios for making HTTP requests
+import React, { useState } from 'react';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';  // Import Bootstrap CSS
 
-// Define the Login component, accepting onLoginSuccess as a prop
-const Login = ({ onLoginSuccess }) => {
-    // Declare state variables for username, password, and error messages
-    const [username, setUsername] = useState(''); // State for storing the username input
-    const [password, setPassword] = useState(''); // State for storing the password input
-    const [error, setError] = useState(''); // State for storing error messages
-    const navigate = useNavigate(); // Initialize the useNavigate hook for navigation
+const Register = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
 
-    // Function to handle login form submission
-    const handleLogin = async (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
         try {
-            // Send a POST request to the login API with the username and password
-            const response = await axios.post('http://localhost:5000/api/login', {
-                username,
-                password,
-            });
-
-            // Check if the login was successful
-            if (response.data.success) {
-                onLoginSuccess(); // Call the onLoginSuccess prop function to indicate success
-                navigate('/home'); // Redirect to the home page
-            } else {
-                setError('Invalid credentials'); // Set an error message if credentials are invalid
-            }
+            const response = await axios.post('http://localhost:5000/api/signup', { username, password });
+            setMessage(response.data.message);
         } catch (error) {
-            // Handle any errors that occur during the request
-            setError('Login failed'); // Set a generic error message
+            if (error.response && error.response.data) {
+                setMessage(error.response.data.message);
+            } else {
+                setMessage('Registration failed. Please try again.');
+            }
         }
     };
 
-    // Render the login form and error messages
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
-                            <h3 className="card-title text-center">Login</h3>
-                            {error && <div className="alert alert-danger">{error}</div>} {/* Show error message if exists */}
-                            <form onSubmit={handleLogin}> {/* Attach handleLogin to form submission */}
-                                <div className="form-group">
+                            <h2 className="card-title text-center mb-4">Register</h2>
+                            <form onSubmit={handleRegister}>
+                                <div className="form-group mb-3">
                                     <label>Username</label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        value={username} // Bind input value to username state
-                                        onChange={(e) => setUsername(e.target.value)} // Update username state on input change
-                                        required // Mark this field as required
+                                        placeholder="Enter username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-group mb-3">
                                     <label>Password</label>
                                     <input
                                         type="password"
                                         className="form-control"
-                                        value={password} // Bind input value to password state
-                                        onChange={(e) => setPassword(e.target.value)} // Update password state on input change
-                                        required // Mark this field as required
+                                        placeholder="Enter password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary btn-block mt-4">
-                                    Login {/* Submit button for the form */}
+                                <button type="submit" className="btn btn-primary btn-block w-100">
+                                    Register
                                 </button>
                             </form>
+                            {message && <div className="alert alert-info mt-3">{message}</div>}
                         </div>
                     </div>
                 </div>
@@ -76,5 +65,4 @@ const Login = ({ onLoginSuccess }) => {
     );
 };
 
-// Export the Login component for use in other parts of the application
-export default Login;
+export default Register;

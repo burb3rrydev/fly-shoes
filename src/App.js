@@ -7,13 +7,14 @@ import Cart from './pages/Cart';
 import Navbar from './components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-// src/App.js
-import Success from './pages/Success'; // Adjust the path as necessary
-import Cancel from './pages/Cancel'; // Adjust the path as necessary
-
+import Success from './pages/Success';
+import Cancel from './pages/Cancel';
+import AdminLogin from './pages/AdminLogin';  // Import AdminLogin page
+import AdminDashboard from './pages/AdminDashboard';  // Import AdminDashboard page
 
 const App = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication state
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // User authentication state
+    const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false); // Admin authentication state
     const [cartItems, setCartItems] = useState([]); // Cart state
 
     // Function to add items to the cart
@@ -76,7 +77,7 @@ const App = () => {
                     }
                 />
                 
-                {/* Login route */}
+                {/* User Login route */}
                 <Route
                     path="/login"
                     element={
@@ -87,12 +88,32 @@ const App = () => {
                 {/* Register route */}
                 <Route path="/register" element={<Register />} />
 
-                {/* Redirect to home if any other path is accessed */}
-                <Route path="*" element={<Navigate to="/home" />} />
+                {/* Admin Login route */}
+                <Route
+                    path="/admin/login"
+                    element={
+                        <AdminLogin onAdminLoginSuccess={() => setIsAdminAuthenticated(true)} />
+                    }
+                />
 
+                {/* Admin Dashboard route */}
+                <Route
+                    path="/admin/dashboard"
+                    element={
+                        isAdminAuthenticated ? (
+                            <AdminDashboard />
+                        ) : (
+                            <Navigate to="/admin/login" />
+                        )
+                    }
+                />
+
+                {/* Success and Cancel routes */}
                 <Route path="/success" element={<Success />} />
-<Route path="/cancel" element={<Cancel />} />
+                <Route path="/cancel" element={<Cancel />} />
 
+                {/* Default redirect */}
+                <Route path="*" element={<Navigate to="/home" />} />
             </Routes>
         </Router>
     );
