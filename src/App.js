@@ -49,6 +49,23 @@ const App = () => {
         <Router>
             <Navbar cartCount={cartItems.reduce((total, item) => total + item.quantity, 0)} />
             <Routes>
+
+            <Route
+    path="/admin/login"
+    element={<AdminLogin onAdminLoginSuccess={() => setIsAdminAuthenticated(true)} />}
+/>
+
+<Route
+    path="/admin/dashboard"
+    element={
+        isAdminAuthenticated ? (
+            <AdminDashboard />
+        ) : (
+            <Navigate to="/admin/login" />
+        )
+    }
+/>
+
                 {/* Home route */}
                 <Route
                     path="/home"
