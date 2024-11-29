@@ -17,7 +17,7 @@ const Home = ({ addToCart }) => {
     useEffect(() => {
         const fetchShoes = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/shoes');
+                const response = await axios.get('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/shoes');
                 const shoeData = response.data;
                 setShoes(shoeData);
                 setFilteredShoes(shoeData);

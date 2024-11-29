@@ -18,7 +18,7 @@ const AdminDashboard = () => {
 
     // Fetch shoes when the component mounts
     useEffect(() => {
-        axios.get('http://localhost:5000/api/shoes') // API to get shoes
+        axios.get('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/shoes') // API to get shoes
             .then(response => {
                 setShoes(response.data);
             })
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
 
     // Handle shoe deletion
     const handleDelete = (shoeId) => {
-        axios.delete(`http://localhost:5000/api/admin/shoes/${shoeId}`)
+        axios.delete(`https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/admin/shoes/${shoeId}`)
             .then(response => {
                 setShoes(shoes.filter(shoe => shoe.id !== shoeId));
             })
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
         e.preventDefault();
         const { id, name, image_url, size, brand, category, price } = selectedShoe;
    
-        axios.put(`http://localhost:5000/api/admin/shoes/${id}`, { name, image_url, size, brand, category, price })
+        axios.put(`https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/admin/shoes/${id}`, { name, image_url, size, brand, category, price })
             .then(response => {
                 setShoes(prevShoes =>
                     prevShoes.map(shoe =>
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
     const handleAddShoe = (e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:5000/api/admin/shoes', newShoe)
+        axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/admin/shoes', newShoe)
             .then(response => {
                 setShoes([...shoes, response.data]); // Add the new shoe to the state
                 setNewShoe({

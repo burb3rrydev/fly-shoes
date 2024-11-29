@@ -16,7 +16,7 @@ const Login = ({ onLoginSuccess }) => {
         e.preventDefault(); // Prevent the default form submission behavior
         try {
             // Send a POST request to the login API with the username and password
-            const response = await axios.post('http://localhost:5000/api/login', {
+            const response = await axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/login', {
                 username,
                 password,
             });
