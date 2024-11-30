@@ -5,23 +5,19 @@ import axios from 'axios'; // axios for making HTTP requests
 
 // Define the Login component, accepting onLoginSuccess as a prop
 const Login = ({ onLoginSuccess }) => {
-    // Declare state variables for username, password, and error messages
     const [username, setUsername] = useState(''); // State for storing the username input
     const [password, setPassword] = useState(''); // State for storing the password input
     const [error, setError] = useState(''); // State for storing error messages
     const navigate = useNavigate(); // Initialize the useNavigate hook for navigation
 
-    // Function to handle login form submission
     const handleLogin = async (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
         try {
-            // Send a POST request to the login API with the username and password
             const response = await axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/login', {
                 username,
                 password,
             });
 
-            // Check if the login was successful
             if (response.data.success) {
                 onLoginSuccess(); // Call the onLoginSuccess prop function to indicate success
                 navigate('/home'); // Redirect to the home page
@@ -29,12 +25,10 @@ const Login = ({ onLoginSuccess }) => {
                 setError('Invalid credentials'); // Set an error message if credentials are invalid
             }
         } catch (error) {
-            // Handle any errors that occur during the request
             setError('Login failed'); // Set a generic error message
         }
     };
 
-    // Render the login form and error messages
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
@@ -68,6 +62,23 @@ const Login = ({ onLoginSuccess }) => {
                                     Login {/* Submit button for the form */}
                                 </button>
                             </form>
+                            <div className="mt-4 text-center">
+                                {/* Button to navigate to the Register page */}
+                                <button
+                                    onClick={() => navigate('/register')}
+                                    className="btn btn-secondary mr-2"
+                                >
+                                    Register
+                                </button>
+
+                                {/* Button to navigate to the Admin Login page */}
+                                <button
+                                    onClick={() => navigate('/admin/login')}
+                                    className="btn btn-secondary"
+                                >
+                                    Admin Login
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
