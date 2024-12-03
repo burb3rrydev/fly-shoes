@@ -24,7 +24,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
         }));
 
         // Send a request to your backend to create a checkout session
-        const response = await axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/create-checkout-session', {
+        const response = await axios.post('http://localhost:5000/api/create-checkout-session', {
             items,
         });
         

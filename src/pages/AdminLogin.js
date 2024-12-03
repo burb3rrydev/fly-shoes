@@ -13,7 +13,7 @@ const AdminLogin = ({ onAdminLoginSuccess }) => {
     
         // Update the URL to point to the correct server (localhost:5000)
         try {
-            const response = await axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/admin/login', { username, password });
+            const response = await axios.post('http://localhost:5000/api/admin/login', { username, password });
     
             if (response.data.success) {
                 onAdminLoginSuccess(); // Update parent state on success

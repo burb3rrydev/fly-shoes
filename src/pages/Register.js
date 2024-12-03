@@ -11,7 +11,7 @@ const Register = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('https://flyshoes-backend-96c5abbf369b.herokuapp.com/api/signup', { username, password });
+            const response = await axios.post('http://localhost:5000/api/signup', { username, password });
             setMessage(response.data.message);
         } catch (error) {
             if (error.response && error.response.data) {
